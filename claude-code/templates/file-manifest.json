@@ -1,0 +1,89 @@
+{
+  "_description": "Deterministic file manifest built via `glob` tool — NOT LLM file-selection. Each file is tagged with category relevance. Glob patterns used are logged here for reproducibility.",
+  "generated_at": "{ISO timestamp}",
+  "target": "{resolved target path}",
+  "total_files": 0,
+  "total_bytes": 0,
+  "glob_patterns_used": {
+    "security": [
+      "**/*Security*.java",
+      "**/*Auth*.java",
+      "**/*Cors*.java",
+      "**/*Crypto*.java",
+      "**/security/**/*.java",
+      "**/auth/**/*.java",
+      "**/*.properties",
+      "**/*.yml",
+      "**/*.yaml"
+    ],
+    "performance": [
+      "**/*Service*.java",
+      "**/*Repository*.java",
+      "**/*Controller*.java",
+      "**/*Cache*.java",
+      "**/*Pool*.java",
+      "**/*DataSource*.java",
+      "**/config/*DataSource*.java",
+      "**/config/*Pool*.java"
+    ],
+    "code-quality": [
+      "**/*.java"
+    ],
+    "configuration": [
+      "**/*.properties",
+      "**/*.yml",
+      "**/*.yaml",
+      "**/*Config*.java",
+      "**/*Configuration*.java",
+      "**/config/**/*.java"
+    ],
+    "dependencies": [
+      "pom.xml",
+      "build.gradle",
+      "build.gradle.kts",
+      "**/*.properties",
+      "**/*.yml"
+    ],
+    "error-handling": [
+      "**/*Controller*.java",
+      "**/*Advice*.java",
+      "**/*Exception*.java",
+      "**/*Error*.java",
+      "**/exception/**/*.java",
+      "**/error/**/*.java"
+    ],
+    "testing": [
+      "**/*Test*.java",
+      "**/*Tests*.java",
+      "**/*IT*.java",
+      "**/test/**/*.java"
+    ],
+    "api-design": [
+      "**/*Controller*.java",
+      "**/*Resource*.java",
+      "**/api/**/*.java",
+      "**/rest/**/*.java"
+    ],
+    "sb4-migration": [
+      "**/*.java",
+      "pom.xml",
+      "build.gradle",
+      "build.gradle.kts",
+      "**/*.properties",
+      "**/*.yml"
+    ]
+  },
+  "sharding": {
+    "required": false,
+    "max_bytes_per_shard": 0,
+    "shard_count": 1
+  },
+  "files": [
+    {
+      "path": "relative/path/to/File.java",
+      "size_bytes": 0,
+      "categories": ["security", "code-quality"],
+      "shard": 0
+    }
+  ]
+}

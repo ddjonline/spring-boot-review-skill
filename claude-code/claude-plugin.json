@@ -1,0 +1,86 @@
+{
+  "name": "spring-boot-review",
+  "version": "2.0.0",
+  "description": "Multi-phase analysis of Java Spring Boot applications producing a curated audit report with scored findings across 8 categories: security, performance, code quality, configuration, dependencies, error handling, testing, and API design. Optionally includes Spring Boot 4.x migration readiness audit. Uses scratchpad files to offload findings from context during long-running analysis. v2.0 adds deterministic re-run consistency: fixed file manifests, deduplication, pre-computed scoring, heartbeat tracking, and sharding for large projects.",
+  "author": "Spring Boot Review Contributors",
+  "repository": "https://github.com/user/spring-boot-review-skill",
+  "license": "MIT",
+  "icon": "🔍",
+  "entry": ".claude/commands/spring-boot-review.md",
+  "claudeCode": ">=1.0.0",
+  "category": "code-review",
+  "tags": ["java", "spring-boot", "security", "performance", "code-quality", "code-review", "audit", "static-analysis", "migration"],
+  "files": [
+    ".claude/commands/spring-boot-review.md",
+    "references/category-guides.md",
+    "references/depth-tiers.md",
+    "references/severity-calibration.md",
+    "references/graphify-queries.md",
+    "references/sb4-migration-checks.md",
+    "references/sb4-starter-migration.md",
+    "references/analysis-prompts.md",
+    "templates/status.json",
+    "templates/file-manifest.json",
+    "templates/deduped-findings.json",
+    "templates/discovery-template.md",
+    "templates/scratchpad-section.md",
+    "templates/report.md",
+    "scripts/check-graphify.sh",
+    "scripts/check-graphify.bat",
+    "scripts/generate-pdf.sh",
+    "scripts/generate-pdf.bat"
+  ],
+  "dependencies": {
+    "graphify": {
+      "required": false,
+      "description": "Pre-indexes codebase to reduce token usage by 60-84%"
+    },
+    "node": {
+      "required": false,
+      "description": "For PDF generation via npx md-to-pdf"
+    },
+    "pandoc": {
+      "required": false,
+      "description": "Fallback PDF generation"
+    }
+  },
+  "parameters": {
+    "target": {
+      "type": "string",
+      "default": "auto-discover",
+      "description": "Directory or path to analyze"
+    },
+    "categories": {
+      "type": "string",
+      "default": "all",
+      "description": "Comma-separated subset: security, performance, code-quality, configuration, dependencies, error-handling, testing, api-design"
+    },
+    "output_dir": {
+      "type": "string",
+      "default": "project-root",
+      "description": "Where to write the report"
+    },
+    "cleanup": {
+      "type": "string",
+      "default": "ask",
+      "enum": ["yes", "no", "ask"],
+      "description": "Delete scratchpad after report?"
+    },
+    "timeout": {
+      "type": "number",
+      "default": 300,
+      "description": "Per-Task timeout in seconds"
+    },
+    "max_parallel": {
+      "type": "number",
+      "default": 4,
+      "description": "Max concurrent category Tasks"
+    },
+    "depth": {
+      "type": "string",
+      "default": "auto",
+      "enum": ["cursory", "basic", "deep"],
+      "description": "Overrides triviality auto-detection"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/deepseek/deepseek-v4-pro",
+  "permissions": [
+    {
+      "action": "shell",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "read",
+      "resource": "*",
+      "effect": "allow"
+    }
+  ],
+  "skills": [".opencode/skills/spring-boot-review"],
+  "watcher": {
+    "ignore": ["dist/**", "node_modules/**", ".git/**"]
+  },
+  "experimental": {
+    "todo": true,
+    "subagent_depth": 2
+  }
+}

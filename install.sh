@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Spring Boot Review Skill — Installer
 # Installs the OpenCode skill and/or Claude Code custom slash command.
-# Default: installs both into the current project directory.
+# Default: installs both globally (~/.config/opencode, ~/.claude).
 #
 # Usage:
-#   ./install.sh                          # Install both to current dir
+#   ./install.sh                          # Install both globally
 #   ./install.sh --opencode-only          # Install only OpenCode skill
 #   ./install.sh --claude-only            # Install only Claude Code command
 #   ./install.sh --target /path/to/project
-#   ./install.sh --global                 # Global install (~/.config/opencode, ~/.claude)
+#   ./install.sh --local                  # Install locally into project directory
 #   ./install.sh --help                   # Show this help
 
 set -euo pipefail
@@ -18,7 +18,7 @@ set -euo pipefail
 INSTALL_OPENCODE=true
 INSTALL_CLAUDE=true
 TARGET_DIR=""
-GLOBAL=false
+LOCAL=false
 OVERWRITE_ALL=false
 SKIP_ALL=false
 
@@ -49,17 +49,17 @@ ${BOLD}Options:${NC}
   --opencode-only       Install only the OpenCode skill
   --claude-only         Install only the Claude Code slash command
   --target <dir>        Install into a specific project directory (default: current dir)
-  --global              Install globally for all projects
+  --local               Install locally into a project directory
   --yes, -y             Skip overwrite prompts — overwrite all existing files
   --skip-existing       Skip overwrite prompts — keep all existing files
   --help, -h            Show this help message
 
 ${BOLD}Examples:${NC}
-  ./install.sh                              # Install both to current directory
-  ./install.sh --opencode-only              # Install only OpenCode skill
-  ./install.sh --target ~/my-spring-app     # Install both to a specific project
-  ./install.sh --global --claude-only       # Global Claude Code command install
-  ./install.sh --global                     # Global install for both platforms
+  ./install.sh                              # Install both globally (default)
+  ./install.sh --opencode-only              # Install only OpenCode skill globally
+  ./install.sh --local                      # Install both to current directory
+  ./install.sh --local --target ~/my-app    # Install both to a specific project
+  ./install.sh --local --claude-only        # Local Claude Code command install
   ./install.sh --yes                        # Install both, overwrite all without asking
 EOF
     exit 0
@@ -83,8 +83,8 @@ while [[ $# -gt 0 ]]; do
             TARGET_DIR="$2"
             shift
             ;;
-        --global)
-            GLOBAL=true
+        --local)
+            LOCAL=true
             ;;
         --yes|-y)
             OVERWRITE_ALL=true
@@ -105,10 +105,7 @@ done
 
 # ── Resolve target ───────────────────────────────────────────────────────────
 
-if [ "$GLOBAL" = true ]; then
-    OPENCODE_TARGET="$HOME/.config/opencode/skills/spring-boot-review"
-    CLAUDE_TARGET="$HOME/.claude"
-else
+if [ "$LOCAL" = true ]; then
     if [ -z "$TARGET_DIR" ]; then
         TARGET_DIR="$(pwd)"
     fi
@@ -116,6 +113,9 @@ else
     TARGET_DIR="$(cd "$TARGET_DIR" 2>/dev/null && pwd || echo "$TARGET_DIR")"
     OPENCODE_TARGET="$TARGET_DIR/.opencode/skills/spring-boot-review"
     CLAUDE_TARGET="$TARGET_DIR/.claude"
+else
+    OPENCODE_TARGET="$HOME/.config/opencode/skills/spring-boot-review"
+    CLAUDE_TARGET="$HOME/.claude"
 fi
 
 # ── Validation ───────────────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ update_gitignore() {
     local entry=".claude/scratchpad/"
 
     # Only for project-level installs (not global)
-    if [ "$GLOBAL" = true ]; then
+    if [ "$LOCAL" = false ]; then
         return
     fi
 
@@ -265,10 +265,10 @@ print_summary() {
 
     if [ "$INSTALL_OPENCODE" = true ]; then
         echo -e "  ${BOLD}OpenCode Skill:${NC}"
-        if [ "$GLOBAL" = true ]; then
-            echo -e "    → Available in all projects"
-        else
+        if [ "$LOCAL" = true ]; then
             echo -e "    → ${TARGET_DIR/$HOME/~}/.opencode/skills/spring-boot-review/"
+        else
+            echo -e "    → Available in all projects"
         fi
         echo -e "    → Invoke with: ${CYAN}@spring-boot-review${NC}"
         echo ""
@@ -276,10 +276,10 @@ print_summary() {
 
     if [ "$INSTALL_CLAUDE" = true ]; then
         echo -e "  ${BOLD}Claude Code Command:${NC}"
-        if [ "$GLOBAL" = true ]; then
-            echo -e "    → Available in all projects"
-        else
+        if [ "$LOCAL" = true ]; then
             echo -e "    → ${TARGET_DIR/$HOME/~}/.claude/"
+        else
+            echo -e "    → Available in all projects"
         fi
         echo -e "    → Invoke with: ${CYAN}/spring-boot-review${NC}"
         echo ""
@@ -306,7 +306,7 @@ if [ "$INSTALL_CLAUDE" = true ]; then
     install_claude
 fi
 
-if [ "$GLOBAL" = false ] && [ -n "$TARGET_DIR" ]; then
+if [ "$LOCAL" = true ] && [ -n "$TARGET_DIR" ]; then
     # Update .gitignore for project-level installs
     if [ -f "$TARGET_DIR/.gitignore" ]; then
         if [ "$INSTALL_CLAUDE" = true ]; then

@@ -3,14 +3,14 @@ setlocal enabledelayedexpansion
 
 REM Spring Boot Review Skill — Installer (Windows)
 REM Installs the OpenCode skill and/or Claude Code custom slash command.
-REM Default: installs both into the current project directory.
+REM Default: installs both globally.
 REM
 REM Usage:
-REM   install.bat                          Install both to current dir
+REM   install.bat                          Install both globally
 REM   install.bat --opencode-only          Install only OpenCode skill
 REM   install.bat --claude-only            Install only Claude Code command
 REM   install.bat --target C:\path\to\project
-REM   install.bat --global                 Global install
+REM   install.bat --local                  Install locally into project directory
 REM   install.bat --help                   Show this help
 
 REM ── Defaults ───────────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ REM ── Defaults ────────────────────
 set INSTALL_OPENCODE=true
 set INSTALL_CLAUDE=true
 set TARGET_DIR=
-set GLOBAL=false
+set LOCAL=false
 set OVERWRITE_ALL=false
 set SKIP_ALL=false
 
@@ -61,8 +61,8 @@ if /I "%~1"=="--target" (
     shift
     goto :parse_args
 )
-if /I "%~1"=="--global" (
-    set GLOBAL=true
+if /I "%~1"=="--local" (
+    set LOCAL=true
     shift
     goto :parse_args
 )
@@ -106,17 +106,17 @@ echo Options:
 echo   --opencode-only       Install only the OpenCode skill
 echo   --claude-only         Install only the Claude Code slash command
 echo   --target ^<dir^>        Install into a specific project directory (default: current dir)
-echo   --global              Install globally for all projects
+echo   --local               Install locally into a project directory
 echo   --yes, -y             Skip overwrite prompts — overwrite all existing files
 echo   --skip-existing       Skip overwrite prompts — keep all existing files
 echo   --help, -h            Show this help message
 echo.
 echo Examples:
-echo   install.bat                              Install both to current directory
-echo   install.bat --opencode-only              Install only OpenCode skill
-echo   install.bat --target C:\my-spring-app    Install both to a specific project
-echo   install.bat --global --claude-only       Global Claude Code command install
-echo   install.bat --global                     Global install for both platforms
+echo   install.bat                              Install both globally (default)
+echo   install.bat --opencode-only              Install only OpenCode skill globally
+echo   install.bat --local                      Install both to current directory
+echo   install.bat --local --target C:\my-app   Install both to a specific project
+echo   install.bat --local --claude-only        Local Claude Code command install
 echo   install.bat --yes                        Install both, overwrite all without asking
 exit /b 0
 
@@ -124,10 +124,7 @@ exit /b 0
 
 REM ── Resolve target ─────────────────────────────────────────────────────────
 
-if "%GLOBAL%"=="true" (
-    set OPENCODE_TARGET=%USERPROFILE%\.config\opencode\skills\spring-boot-review
-    set CLAUDE_TARGET=%USERPROFILE%\.claude
-) else (
+if "%LOCAL%"=="true" (
     if "%TARGET_DIR%"=="" set TARGET_DIR=%CD%
     REM Push to resolve full path
     pushd "%TARGET_DIR%" 2>nul
@@ -139,6 +136,9 @@ if "%GLOBAL%"=="true" (
     popd
     set OPENCODE_TARGET=%TARGET_DIR%\.opencode\skills\spring-boot-review
     set CLAUDE_TARGET=%TARGET_DIR%\.claude
+) else (
+    set OPENCODE_TARGET=%USERPROFILE%\.config\opencode\skills\spring-boot-review
+    set CLAUDE_TARGET=%USERPROFILE%\.claude
 )
 
 REM ── Validation ─────────────────────────────────────────────────────────────
@@ -273,7 +273,7 @@ REM  Post-install update .gitignore (project-level only)
 REM ═══════════════════════════════════════════════════════════════════════════
 
 :post_install
-if "%GLOBAL%"=="true" goto :print_summary
+if "%LOCAL%"=="false" goto :print_summary
 if "%TARGET_DIR%"=="" goto :print_summary
 
 set GITIGNORE=%TARGET_DIR%\.gitignore
@@ -298,10 +298,10 @@ echo.
 
 if "%INSTALL_OPENCODE%"=="true" (
     echo   OpenCode Skill:
-    if "%GLOBAL%"=="true" (
-        echo     ^> Available in all projects
-    ) else (
+    if "%LOCAL%"=="true" (
         echo     ^> %TARGET_DIR%\.opencode\skills\spring-boot-review\
+    ) else (
+        echo     ^> Available in all projects
     )
     echo     ^> Invoke with: @spring-boot-review
     echo.
@@ -309,10 +309,10 @@ if "%INSTALL_OPENCODE%"=="true" (
 
 if "%INSTALL_CLAUDE%"=="true" (
     echo   Claude Code Command:
-    if "%GLOBAL%"=="true" (
-        echo     ^> Available in all projects
-    ) else (
+    if "%LOCAL%"=="true" (
         echo     ^> %TARGET_DIR%\.claude\
+    ) else (
+        echo     ^> Available in all projects
     )
     echo     ^> Invoke with: /spring-boot-review
     echo.

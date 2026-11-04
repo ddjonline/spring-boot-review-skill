@@ -127,21 +127,21 @@ Use the installer script to install either or both platforms:
 
 ```bash
 # macOS / Linux / WSL
-./install.sh                              # Install both platforms to current directory
-./install.sh --target ~/my-spring-app     # Install both to a specific project
-./install.sh --global                     # Global install for all projects
-./install.sh --opencode-only              # OpenCode skill only
-./install.sh --claude-only                # Claude Code command only
+./install.sh                              # Install both platforms globally (default)
+./install.sh --opencode-only              # OpenCode skill only (global)
+./install.sh --claude-only                # Claude Code command only (global)
+./install.sh --local                      # Install both to current project directory
+./install.sh --local --target ~/my-app    # Install both to a specific project
 ./install.sh --yes                        # Skip overwrite prompts
 ```
 
 ```batch
 REM Windows
-install.bat                               Install both platforms to current directory
-install.bat --target C:\my-spring-app     Install both to a specific project
-install.bat --global                      Global install for all projects
-install.bat --opencode-only               OpenCode skill only
-install.bat --claude-only                 Claude Code command only
+install.bat                               Install both platforms globally (default)
+install.bat --opencode-only               OpenCode skill only (global)
+install.bat --claude-only                 Claude Code command only (global)
+install.bat --local                       Install both to current project directory
+install.bat --local --target C:\my-app    Install both to a specific project
 install.bat --yes                         Skip overwrite prompts
 ```
 
@@ -150,8 +150,8 @@ install.bat --yes                         Skip overwrite prompts
 | *(no flags)* | Install both OpenCode and Claude Code versions |
 | `--opencode-only` | Install only the OpenCode skill |
 | `--claude-only` | Install only the Claude Code slash command |
-| `--target <dir>` | Install to a specific project directory (default: current dir) |
-| `--global` | Install globally (`~/.config/opencode/` / `~/.claude/`) |
+| `--target <dir>` | Install to a specific project directory (only with `--local`) |
+| `--local` | Install locally into a project directory instead of globally |
 | `--yes`, `-y` | Skip overwrite prompts — overwrite all existing files |
 | `--skip-existing` | Skip overwrite prompts — keep all existing files |
 | `--help`, `-h` | Show help message |

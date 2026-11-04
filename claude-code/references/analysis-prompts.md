@@ -375,7 +375,7 @@ Your tools are restricted:
 - ALLOW: read `.claude/scratchpad/spring-boot-review/deduped-findings.json`
 - ALLOW: read `.claude/scratchpad/spring-boot-review/discovery.md`
 - ALLOW: read `.claude/scratchpad/spring-boot-review/.status.json`
-- ALLOW: write to `{output_dir}/spring-boot-review-report.md`
+- ALLOW: write to `{output_dir}/spring-boot-review-{PROJECT_NAME}-{USERNAME}-{TIMESTAMP}.md`
 - DENY: shell commands, web_fetch, web_search
 - DENY: reading or editing files outside `.claude/scratchpad/spring-boot-review/` and `{output_dir}`
 
@@ -427,14 +427,14 @@ Use `templates/report.md` as the structure. Fill in all placeholders.
 - Every CRITICAL and HIGH finding MUST have a concrete fix suggestion.
 - Cross-category findings: list all relevant categories. The `primary_category`
   from `deduped-findings.json` determines which section they appear under.
-- Write the report to `{output_dir}/spring-boot-review-report.md`.
+- Write the report to `{output_dir}/spring-boot-review-{PROJECT_NAME}-{USERNAME}-{TIMESTAMP}.md`.
 - The Score Cross-Check table must show both the pre-computed score and the
   computed-from-counts score side by side with a ✓ or ✗ match indicator.
 
 ## Response to Parent
 
 Return EXACTLY one line:
-`Report written to {output_dir}/spring-boot-review-report.md — {N} findings, Score: {SCORE}/100 ({GRADE})`
+`Report written to {output_dir}/spring-boot-review-{PROJECT_NAME}-{USERNAME}-{TIMESTAMP}.md — {N} findings, Score: {SCORE}/100 ({GRADE})`
 Do NOT echo the report content. The report lives on disk.
 
 ## Data File Layout

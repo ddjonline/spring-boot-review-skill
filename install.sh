@@ -174,11 +174,11 @@ copy_file() {
 install_opencode() {
     echo ""
     echo -e "${BOLD}${CYAN}── Installing OpenCode Skill ──────────────────────────────────${NC}"
-    echo -e "  Source: ${SOURCE_DIR/$HOME/~}/.opencode/skills/spring-boot-review/"
+    echo -e "  Source: ${SOURCE_DIR/$HOME/~}/opencode-skill/.opencode/skills/spring-boot-review/"
     echo -e "  Target: ${OPENCODE_TARGET/$HOME/~}/"
     echo ""
 
-    local src="$SOURCE_DIR/.opencode/skills/spring-boot-review"
+    local src="$SOURCE_DIR/opencode-skill/.opencode/skills/spring-boot-review"
 
     if [ ! -d "$src" ]; then
         echo -e "${RED}Error: OpenCode skill source not found at $src${NC}" >&2

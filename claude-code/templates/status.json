@@ -5,6 +5,8 @@
   "depth": "{cursory|basic|deep}",
   "rigor": "{cursory|basic|deep}",
   "target": "{resolved absolute target path}",
+  "project_name": "{basename of target or artifactId from build file}",
+  "username": "{system user or git user.name}",
   "project_fingerprint": "{sha256 of pom.xml/build.gradle file contents}",
   "manifest_hash": "{sha256 of file-manifest.json — detects source file additions/removals/renames}",
   "config_hash": "{sha256 of (depth + rigor + active categories + skill_version) — detects parameter changes}",

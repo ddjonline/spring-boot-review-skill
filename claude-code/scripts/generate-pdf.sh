@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-REPORT_MD="${1:-spring-boot-review-report.md}"
+REPORT_MD="${1:-spring-boot-review-{project}-{user}-{timestamp}.md}"
 
 if [ ! -f "$REPORT_MD" ]; then
     echo "ERROR: Report file not found: $REPORT_MD" >&2

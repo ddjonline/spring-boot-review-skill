@@ -73,7 +73,8 @@ See [Re-run Consistency Design](#re-run-consistency-design) for the full archite
                     └────────────────────┬──────────────────────┘
                                          │
                     ┌────────────────────▼──────────────────────┐
-                    │  Output: spring-boot-review-report.md + .pdf    │
+                    │  Output: spring-boot-review-{project}-     │
+                    │  {user}-{timestamp}.md + .pdf              │
                     │  Score: 73/100 (C) — Needs Improvement     │
                     └───────────────────────────────────────────┘
 ```
@@ -279,8 +280,8 @@ Token estimates assume graphify is being used. Without graphify, multiply by 2�
 
 ```
 {project_root}/
-├── spring-boot-review-report.md    # Curated Markdown report
-├── spring-boot-review-report.pdf   # PDF version (if converter available)
+├── spring-boot-review-{project}-{user}-{timestamp}.md    # Curated Markdown report
+├── spring-boot-review-{project}-{user}-{timestamp}.pdf   # PDF version (if converter available)
 └── .opencode/scratchpad/           # OpenCode: raw findings
     └── spring-boot-review/          # (or .claude/scratchpad/ for Claude Code)
         ├── .status.json

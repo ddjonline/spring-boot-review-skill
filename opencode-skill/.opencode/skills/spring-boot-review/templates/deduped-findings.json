@@ -1,0 +1,49 @@
+{
+  "_description": "Deduplicated findings with severity assigned by the scoring phase. Cross-category duplicates merged by file location. Penalties applied once per canonical finding.",
+  "generated_at": "{ISO timestamp}",
+  "scored_at": "{ISO timestamp}",
+  "dedup_summary": {
+    "total_raw_findings": 0,
+    "total_deduped_findings": 0,
+    "duplicates_merged": 0
+  },
+  "severity_counts": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MEDIUM": 0,
+    "LOW": 0,
+    "INFO": 0
+  },
+  "pre_computed_score": 100,
+  "pre_computed_grade": "A",
+  "pre_computed_grade_label": "Excellent",
+  "pre_computed_color": "#22c55e",
+  "findings": [
+    {
+      "id": "finding-001",
+      "severity": "HIGH",
+      "title": "Short descriptive title",
+      "location": {
+        "file": "path/to/File.java",
+        "line": "42-58",
+        "method": "methodName"
+      },
+      "categories": ["security", "configuration"],
+      "primary_category": "security",
+      "finding": "Clear description of the issue",
+      "impact": "Why this matters",
+      "suggestion": "Concrete fix recommendation",
+      "references": "CWE-xxx or Spring docs link",
+      "merged_from": [
+        {
+          "category": "security",
+          "raw_title": "Original security finding title"
+        },
+        {
+          "category": "configuration",
+          "raw_title": "Original configuration finding title"
+        }
+      ]
+    }
+  ]
+}

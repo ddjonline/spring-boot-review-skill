@@ -71,7 +71,8 @@ The report narrative (executive summary, key takeaways) will differ in wording s
                     └────────────────────┬──────────────────────┘
                                          │
                     ┌────────────────────▼──────────────────────┐
-                    │  Output: spring-boot-review-report.md + .pdf    │
+                    │  Output: spring-boot-review-{project}-     │
+                    │  {user}-{timestamp}.md + .pdf              │
                     │  Score: 73/100 (C) — Needs Improvement     │
                     └───────────────────────────────────────────┘
 ```
@@ -182,8 +183,8 @@ During execution, the command will prompt you for:
 
 ```
 {project_root}/
-├── spring-boot-review-report.md    # Curated Markdown report
-├── spring-boot-review-report.pdf   # PDF version (if converter available)
+├── spring-boot-review-{project}-{user}-{timestamp}.md    # Curated Markdown report
+├── spring-boot-review-{project}-{user}-{timestamp}.pdf   # PDF version (if converter available)
 └── .claude/scratchpad/
     └── spring-boot-review/          # Raw findings (cleaned up based on `cleanup` param)
         ├── .status.json

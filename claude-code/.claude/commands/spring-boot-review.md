@@ -2,7 +2,7 @@
 
 Multi-phase analysis of a Java Spring Boot codebase. Findings stream to
 scratchpad files on disk — one per category — so context never retains raw
-findings. A single curation Task subagent assembles the final report (Markdown + PDF).
+findings. A single curation Task subagent assembles the final report (Markdown + PDF) with a structured filename: `spring-boot-review-{project}-{user}-{timestamp}.md`.
 
 **v2.0 consistency guarantees:** Running this command twice on the same unchanged
 codebase with the same user choices produces the **same score and grade**, the
@@ -21,7 +21,7 @@ All optional. Accept from the user at invocation:
 | -------------- | --------- | ------------------------------------------------------------ |
 | `target`       | auto      | Directory or path to analyze                                 |
 | `categories`   | `all` (8) | Comma-separated subset of: `security,performance,code-quality,configuration,dependencies,error-handling,testing,api-design` |
-| `output_dir`   | project root | Where to write `spring-boot-review-report.md`                   |
+| `output_dir`   | project root | Where to write the report (filename: `spring-boot-review-{project}-{user}-{timestamp}.md`) |
 | `cleanup`      | `ask`     | `yes`, `no`, or `ask`                                       |
 | `timeout`      | `300`     | Per-Task timeout (seconds)                                   |
 | `max_parallel` | `4`       | Max concurrent category Tasks                                |
@@ -29,6 +29,23 @@ All optional. Accept from the user at invocation:
 
 The `sb4-migration` category is NOT in the default list — it is offered
 interactively during Phase 1 if the detected SB version is < 4.0.0.
+
+## Output Filename Convention
+
+The report is written with a structured filename for easy identification:
+`spring-boot-review-{PROJECT_NAME}-{USERNAME}-{TIMESTAMP}.md`
+
+| Component | Source | Example |
+|-----------|--------|---------|
+| `spring-boot-review` | Hardcoded command name | `spring-boot-review` |
+| `{PROJECT_NAME}` | `basename({target})` or artifactId from build file | `my-spring-app` |
+| `{USERNAME}` | `$USER` env var or `git config user.name` | `ddjohnson` |
+| `{TIMESTAMP}` | `date +%Y%m%d%H%M%S` at report generation | `20261104120000` |
+
+Example: `spring-boot-review-my-spring-app-ddjohnson-20261104120000.md`
+
+Derive `{PROJECT_NAME}` and `{USERNAME}` during Phase 0 and store in `.status.json`.
+Derive `{TIMESTAMP}` at the start of Phase 3 (report assembly).
 
 ## Consistency Design
 
@@ -67,12 +84,15 @@ Follow phases in order. Do not skip.
 3. **Detect Spring Boot version.** Read the `pom.xml` or `build.gradle` to
    extract the Spring Boot version (e.g., `3.5.1`, `4.1.2`). Store as
    `{SB_VERSION}` for all subsequent phases.
-4. **Compute project fingerprint.** The fingerprint is a compound hash:
+4. **Derive project name and username.** Store in `.status.json` for report filename:
+   - `project_name`: `basename({target})` or `<artifactId>` from build file
+   - `username`: `$USER` environment variable or `git config user.name` (first available)
+5. **Compute project fingerprint.** The fingerprint is a compound hash:
    - `sha256` of the **contents** of `pom.xml`/`build.gradle` (NOT the path).
    - Combined with `sha256` of the resolved target directory path.
    - Combined with the command version (`2.0`).
    - Store as `project_fingerprint` in `.status.json`.
-5. **Check for existing scratchpad** at `.claude/scratchpad/spring-boot-review/.status.json`.
+6. **Check for existing scratchpad** at `.claude/scratchpad/spring-boot-review/.status.json`.
    - **If it exists**, validate project identity:
      - Compare `.status.json` `target` against resolved current target.
      - Compare `project_fingerprint` against the computed value.
@@ -215,8 +235,8 @@ chmod 700 .claude/scratchpad/spring-boot-review 2>/dev/null || true
 ```
 
 Write `.status.json` from `templates/status.json`, including `target`,
-`project_fingerprint`, `manifest_hash`, `config_hash`, `sb_version`,
-`sb4_migration_included`, `depth`, `rigor`, `triviality_reason`,
+`project_name`, `username`, `project_fingerprint`, `manifest_hash`, `config_hash`,
+`sb_version`, `sb4_migration_included`, `depth`, `rigor`, `triviality_reason`,
 and `token_budget`. Mark active categories as `pending` (or `complete`
 if resuming). Mark excluded categories as `skipped`.
 
@@ -375,6 +395,15 @@ Spawn a single Claude Code `Task` subagent using the **Report Assembly Task** pr
 Task reads it from `deduped-findings.json` and does NOT calculate it.
 It performs a cross-check to verify the arithmetic matches.
 
+**Output filename:** Generate a timestamp at the start of this phase:
+```
+{TIMESTAMP} = date +%Y%m%d%H%M%S
+```
+Read `project_name` and `username` from `.status.json`. Construct the filename:
+`spring-boot-review-{project_name}-{username}-{TIMESTAMP}.md`
+
+Full output path: `{output_dir}/spring-boot-review-{project_name}-{username}-{TIMESTAMP}.md`
+
 **Two-pass strategy:**
 
 - **Pass 1:** Read severity + title + location from each deduplicated finding.
@@ -404,10 +433,10 @@ Label them clearly as "Spring Boot 4.x Migration Readiness" findings.
 Cross-category findings appear under their `primary_category` with a
 "Cross-referenced in: {other categories}" note.
 
-Use `templates/report.md` for structure. Write output to `{output_dir}/spring-boot-review-report.md`.
+Use `templates/report.md` for structure. Write output to `{output_dir}/spring-boot-review-{project_name}-{username}-{TIMESTAMP}.md`.
 
 **Report Task response:** The Task must return exactly one line:
-`Report written to {output_dir}/spring-boot-review-report.md — {N} findings, Score: {SCORE}/100 ({GRADE})`.
+`Report written to {output_dir}/spring-boot-review-{project_name}-{username}-{TIMESTAMP}.md — {N} findings, Score: {SCORE}/100 ({GRADE})`.
 The parent only needs to confirm success for Phase 4 (PDF) and Phase 5 (cleanup).
 The report content lives on disk — never echo it into parent context.
 

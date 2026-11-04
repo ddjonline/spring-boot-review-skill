@@ -1,0 +1,36 @@
+{
+  "started_at": "{ISO timestamp}",
+  "resumed_at": "{ISO timestamp or null}",
+  "skill_version": "2.0",
+  "depth": "{cursory|basic|deep}",
+  "rigor": "{cursory|basic|deep}",
+  "target": "{resolved absolute target path}",
+  "project_name": "{basename of target or artifactId from build file}",
+  "username": "{system user or git user.name}",
+  "project_fingerprint": "{sha256 of pom.xml/build.gradle file contents}",
+  "manifest_hash": "{sha256 of file-manifest.json — detects source file additions/removals/renames}",
+  "config_hash": "{sha256 of (depth + rigor + active categories + skill_version) — detects parameter changes}",
+  "sb_version": "{detected Spring Boot version, e.g. 3.5.1 or 4.1.2}",
+  "sb4_migration_included": false,
+  "graphify_used": false,
+  "triviality_reason": "{reason string, e.g. '15 source files ≤ 20 threshold — automatic cursory'}",
+  "token_budget": {
+    "estimated_total_source_bytes": 0,
+    "sharding_required": false,
+    "shard_count": 1
+  },
+  "pre_computed_score": null,
+  "pre_computed_grade": null,
+  "score_cross_check_passed": null,
+  "categories": {
+    "security": "pending",
+    "performance": "pending",
+    "code-quality": "pending",
+    "configuration": "pending",
+    "dependencies": "pending",
+    "error-handling": "pending",
+    "testing": "pending",
+    "api-design": "pending",
+    "sb4-migration": "skipped"
+  }
+}

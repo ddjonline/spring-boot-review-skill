@@ -223,11 +223,11 @@ if "%INSTALL_OPENCODE%"=="false" goto :install_claude
 
 echo.
 echo ── Installing OpenCode Skill ──────────────────────────────
-echo   Source: %SOURCE_DIR%\.opencode\skills\spring-boot-review\
+echo   Source: %SOURCE_DIR%\opencode-skill\.opencode\skills\spring-boot-review\
 echo   Target: %OPENCODE_TARGET%
 echo.
 
-set OPENCODE_SRC=%SOURCE_DIR%\.opencode\skills\spring-boot-review
+set OPENCODE_SRC=%SOURCE_DIR%\opencode-skill\.opencode\skills\spring-boot-review
 
 if not exist "%OPENCODE_SRC%" (
     echo %RED% Error: OpenCode skill source not found at %OPENCODE_SRC%

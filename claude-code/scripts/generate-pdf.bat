@@ -9,7 +9,7 @@ REM   1 - Both converters failed, markdown-only delivery
 setlocal enabledelayedexpansion
 
 set "REPORT_MD=%~1"
-if "%REPORT_MD%"=="" set "REPORT_MD=spring-boot-review-report.md"
+if "%REPORT_MD%"=="" set "REPORT_MD=spring-boot-review-{project}-{user}-{timestamp}.md"
 
 REM Validate report file exists
 if not exist "%REPORT_MD%" (
